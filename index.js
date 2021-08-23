@@ -4,57 +4,68 @@ const { v4: uuid } = require('uuid');
 const jsSHA = require('jssha');
 require('dotenv').config();
 
+const bluesnap = require('bluesnap');
+const fetch = require('node-fetch');
+
+const CustomRoute = require('./api');
+
 const app = express();
 
 const stripe = require('stripe')(process.env.STRIPE_KEY)
 
-
 app.use(express.json());
 app.use(cors());
 
+new CustomRoute(app)
 
-app.post('/stripe-payment', (req, res) => {
-    const { products, total, token } = req.body;
+const buff = Buffer.from("Rajvardhan").toString('base64');
 
-    const idempotencyKey = uuid();
+const gateway = new bluesnap.BlueSnapGateway({
+    environment: 'Sandbox',
+    username: 'rajvardhan',
+    password: 'Singh@2000'
+});
 
-    return stripe.customers.create({
-        email: token.email,
-        source: token.id,
-        name: token.card.name,
-        address: {
-            line1: '510 Townsend St',
-            postal_code: '452009',
-            city: 'Indore',
-            state: 'MP',
-            country: 'IN',
+const cardTransaction = () => {
+    const data = {
+        "amount": 11,
+        "softDescriptor": "DescTest",
+        "cardHolderInfo": {
+            "firstName": "Raj",
+            "lastName": "singh",
+            "zip": "123456"
         },
-        shipping: {
-            name: 'Raj',
-            address: {
-                city: 'new york',
-                country: 'usa'
-            }
-        }
-    }).then(customer => {
-        stripe.charges.create({
-            amount: total * 100,
-            currency: 'inr',
-            customer: customer.id,
-            receipt_email: token.email,
-            description: 'Description about the product purchased',
-            shipping: {
-                name: "Raj",
-                address: {
-                    city: 'new york',
-                    country: 'usa'
-                }
-            }
-        }, { idempotencyKey })
+        "currency": "USD",
+        "creditCard": {
+            "expirationYear": 2023,
+            "securityCode": 837,
+            "expirationMonth": "02",
+            "cardNumber": "4263982640269299"
+        },
+        "cardTransactionType": "AUTH_CAPTURE"
+    }
+
+    const base64String = Buffer.from('API_16292849709391208477151:Singh@2000').toString('base64');
+    console.log(base64String, ' base64')
+
+    fetch('https://sandbox.bluesnap.com/services/2/transactions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Basic ${base64String}`
+        },
+        body: JSON.stringify(data)
+    }).then(response => {
+        console.log(response, ' response')
+        return response.json()
     })
-        .then(result => res.status(200).json(result))
-        .catch(err => console.log(err))
-})
+        .then((res) => {
+            console.log(res, ' res')
+        }).catch(e => console.log(e, ' error'))
+}
+
+// cardTransaction();
 
 app.post('/generate-hash', (req, res) => {
     const { txnid, amount, productinfo, firstname, email } = req.body;
@@ -91,6 +102,8 @@ app.post('/payu-payment', (req, res) => {
         res.send({ 'status': "Error occured" });
     }
 })
+
+
 
 app.listen(8000, () => {
     console.log("Listning  at PORT 8000")
