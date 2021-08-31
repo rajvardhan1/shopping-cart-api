@@ -1,8 +1,10 @@
+require('dotenv').config();
+
+const path = require('path');
 const cors = require('cors');
 const express = require('express');
 const { v4: uuid } = require('uuid');
 const jsSHA = require('jssha');
-require('dotenv').config();
 
 const bluesnap = require('bluesnap');
 const fetch = require('node-fetch');
@@ -10,6 +12,9 @@ const fetch = require('node-fetch');
 const CustomRoute = require('./api');
 
 const app = express();
+
+global.ROOT_DIR = path.resolve(__dirname)
+
 
 const stripe = require('stripe')(process.env.STRIPE_KEY)
 

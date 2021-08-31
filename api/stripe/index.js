@@ -1,50 +1,73 @@
 require('dotenv').config();
+const { v4: uuid } = require('uuid');
 
 const stripe = require('stripe')(process.env.STRIPE_KEY)
 
-const captureCardCharge = (req, res) => {
-    const { products, total, token } = req.body;
+const createCustomerCard = async (req) => {
+    const { firstName, lastName, cardNumber, expMonth, expYear, cvv } = req.body;
+    const token = await stripe.tokens.create({
+        card: {
+            name: firstName + " " + lastName,
+            number: cardNumber,
+            exp_month: expMonth,
+            exp_year: expYear,
+            cvc: cvv,
+        }
+    })
+
+    return token;
+}
+
+const captureCardCharge = async (req, res) => {
+    const { email, total, addressLine1, postalCode, phoneNumber, city, state, country } = req.body;
+
+    const token = await createCustomerCard(req)
 
     const idempotencyKey = uuid();
 
-    return stripe.customers.create({
-        email: token.email,
+    const customer = await stripe.customers.create({
+        email: email,
         source: token.id,
         name: token.card.name,
         address: {
-            line1: '510 Townsend St',
-            postal_code: '452009',
-            city: 'Indore',
-            state: 'MP',
-            country: 'IN',
+            line1: addressLine1,
+            postal_code: postalCode,
+            city: city,
+            state: state,
+            country: country,
         },
         shipping: {
-            name: 'Raj',
+            name: token.card.name,
             address: {
-                city: 'new york',
-                country: 'usa'
+                city: city,
+                country: country
             }
         }
-    }).then(customer => {
-        stripe.charges.create({
-            amount: total * 100,
-            currency: 'inr',
-            customer: customer.id,
-            receipt_email: token.email,
-            description: 'Description about the product purchased',
-            shipping: {
-                name: "Raj",
-                address: {
-                    city: 'new york',
-                    country: 'usa'
-                }
-            }
-        }, { idempotencyKey })
     })
-        .then(result => res.status(200).json(result))
-        .catch(err => console.log(err))
+
+    const result = await stripe.charges.create({
+        amount: total * 100,
+        currency: 'inr',
+        customer: customer.id,
+        receipt_email: email,
+        description: 'Description about the product purchased',
+        shipping: {
+            name: token.card.name,
+            address: {
+                line1: addressLine1,
+                postal_code: postalCode,
+                city: city,
+                state: state,
+                country: country
+            },
+            phone: phoneNumber
+        }
+    }, { idempotencyKey })
+
+    return result;
 }
 
 module.exports = {
-    captureCardCharge
+    captureCardCharge,
+    createCustomerCard
 }

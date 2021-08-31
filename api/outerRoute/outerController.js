@@ -1,11 +1,17 @@
 const { stripeCardChargeModel } = require('./outerModel');
 const { sendSMS } = require('../../twilio.config');
 const { transporter, mailOptions } = require('../../nodemailer.config');
+const { sendEmail } = require('../../sendgrid.config');
 
 class outerController {
 
-    stripeCardCharge(req, res) {
-        stripeCardChargeModel(req, res);
+    async stripeCardCharge(req, res) {
+        const result = await stripeCardChargeModel(req, res);
+        if (result instanceof Error) {
+            res.status(400).send("payment failed");
+        } else {
+            res.status(200).send("payment success");
+        }
     }
 
     sendMessageOTP = (req, res) => {
@@ -21,6 +27,13 @@ class outerController {
             res.send(error)
         })
         res.send("success")
+    }
+
+    sendSendGridMail = (req, res) => {
+        const { to, body, subject } = req.body;
+        console.log(req.body);
+        const result = sendEmail(to, body, subject);
+        res.status(200).send(result)
     }
 
 }
