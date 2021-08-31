@@ -2,14 +2,130 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+  <title>Invoice</title>
 </head>
 
+<style>
+  body {
+    margin-top: 10px;
+    background: #eee;
+  }
+</style>
+
 <body>
-    <h1>Hello, </h1>
+  <div class="container bootdey">
+    <div class="row invoice row-printable">
+      <div class="col-md-10">
+
+        <div class="panel panel-default plain" id="dash_0">
+
+          <div class="panel-body p30">
+            <div class="row">
+              <div class="col-lg-6">
+                <!-- <div class="invoice-logo"><img width="100" src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                    alt="Invoice logo"></div> -->
+              </div>
+
+              <div class="col-lg-6">
+
+                <div class="invoice-from">
+                  <ul class="list-unstyled text-right">
+                    <li>Dash LLC</li>
+                    <li>2500 Ridgepoint Dr, Suite 105-C</li>
+                    <li>Austin TX 78754</li>
+                    <li>VAT Number EU826113958</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="col-lg-12">
+                <div class="invoice-details mt25">
+                  <div class="well">
+                    <ul class="list-unstyled mb0">
+                      <li><strong>Invoice</strong> #936988</li>
+                      <li><strong>Invoice Date:</strong> Monday, October 10th, 2015</li>
+                      <li><strong>Due Date:</strong> Thursday, December 1th, 2015</li>
+                      <li><strong>Status:</strong> <span class="label label-danger">UNPAID</span></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="invoice-to mt25">
+                  <ul class="list-unstyled">
+                    <li><strong>Invoiced To</strong></li>
+                    <li>
+                      <%= firstName+" "+lastName %>
+                    </li>
+                    <li>
+                      <%= addressLine1 %>
+                    </li>
+                    <li>
+                      <%= postalCode+" , "+city  %></li>
+                    <li><%= city+" , "+country %></li>
+                  </ul>
+                </div>
+                <div class=" invoice-items">
+                        <div class="table-responsive" style="overflow: hidden; outline: none;" tabindex="0">
+                          <table class="table table-bordered">
+                            <thead>
+                              <tr>
+                                <th class="per70 text-center">Title</th>
+                                <th class="per5 text-center">Qty</th>
+                                <th class="per25 text-center">Total</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <% products.forEach(function(data){ %>
+                                <tr>
+                                  <td>
+                                    <%= data.title %>
+                                  </td>
+                                  <td class="text-center">
+                                    <%= data.quantity %>
+                                  </td>
+                                  <td class="text-center">$<%= data.price %> USD</td>
+                                </tr>
+                                <% }); %>
+                            </tbody>
+                            <tfoot>
+                              <tr>
+                                <th colspan="2" class="text-right">Sub Total:</th>
+                                <th class="text-center">$<%= total %> USD</th>
+                              </tr>
+                              <tr>
+                                <th colspan="2" class="text-right">20% VAT:</th>
+                                <th class="text-center">$00.00 USD</th>
+                              </tr>
+                              <tr>
+                                <th colspan="2" class="text-right">Credit:</th>
+                                <th class="text-center">$00.00 USD</th>
+                              </tr>
+                              <tr>
+                                <th colspan="2" class="text-right">Total:</th>
+                                <th class="text-center">$<%= total %> USD</th>
+                              </tr>
+                            </tfoot>
+                          </table>
+                        </div>
+                </div>
+                <div class="invoice-footer mt25">
+                  <p class="text-center">Generated on Monday, October 08th, 2015 <a href="#"
+                      class="btn btn-default ml15"><i class="fa fa-print mr5"></i> Print</a></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
 </body>
 
 </html>
