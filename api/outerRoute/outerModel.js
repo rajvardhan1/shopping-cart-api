@@ -6,6 +6,7 @@ const { transporter, mailOptions } = require('../../nodemailer.config');
 const stripeCardChargeModel = async (req, res) => {
     const { email, phoneNumber, firstName, lastName, addressLine1, postalCode, city,
         state, country, products, total } = req.body;
+    console.log(req.body, ' body')
     const result = await captureCardCharge(req, res);
 
     if (false) {
@@ -16,7 +17,6 @@ const stripeCardChargeModel = async (req, res) => {
         });
         const subject = "Invoice mail"
         const response = await transporter.sendMail(mailOptions(email, subject, body), (error) => {
-            console.log(error, ' mailError')
             res.send(error)
         })
         const message = "You have successfully purchased the product"
@@ -25,6 +25,22 @@ const stripeCardChargeModel = async (req, res) => {
     return result;
 }
 
+const getProductsModel = (callback) => {
+
+    const sql = `select * from products`;
+
+    DBConnection.query(sql, (err, result) => {
+
+        if (result.length) {
+            callback(result);
+        } else {
+            callback(false, ' No data found')
+        }
+
+    })
+}
+
 module.exports = {
-    stripeCardChargeModel
+    stripeCardChargeModel,
+    getProductsModel
 }

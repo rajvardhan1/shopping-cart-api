@@ -11,4 +11,6 @@ router.post('/send-otp', outer.sendMessageOTP)
 router.post('/send-mail', outer.sendMail);
 router.post('/sendgrid-mail', outer.sendSendGridMail)
 
+router.get('/get-products', outer.getProducts)
+
 module.exports = router;

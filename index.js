@@ -21,6 +21,8 @@ const stripe = require('stripe')(process.env.STRIPE_KEY)
 app.use(express.json());
 app.use(cors());
 
+global.DBConnection = require('./db.config')
+
 new CustomRoute(app)
 
 const buff = Buffer.from("Rajvardhan").toString('base64');

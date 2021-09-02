@@ -1,7 +1,7 @@
-const { stripeCardChargeModel } = require('./outerModel');
 const { sendSMS } = require('../../twilio.config');
 const { transporter, mailOptions } = require('../../nodemailer.config');
 const { sendEmail } = require('../../sendgrid.config');
+const { stripeCardChargeModel, getProductsModel } = require('./outerModel');
 
 class outerController {
 
@@ -34,6 +34,22 @@ class outerController {
         console.log(req.body);
         const result = sendEmail(to, body, subject);
         res.status(200).send(result)
+    }
+
+    getProducts = (req, res) => {
+        getProductsModel((data, error) => {
+            let response = { status: 0, data: null, error: null };
+
+            if (data === false) {
+                response.status = 0;
+                response.error = error;
+            } else {
+                response.status = 1;
+                response.data = data;
+            }
+
+            res.send(response);
+        });
     }
 
 }
