@@ -40,7 +40,22 @@ const getProductsModel = (callback) => {
     })
 }
 
+const createProductModel = (req, res) => {
+    const {title, description, price, quantity, image} = req.body;
+
+    DBConnection.query("INSERT INTO products Values ?", (title, description, price, quantity, image), (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(err, null);
+          return;
+        }
+    })    
+}
+
+  
+
 module.exports = {
     stripeCardChargeModel,
-    getProductsModel
+    getProductsModel, 
+    createProductModel
 }
