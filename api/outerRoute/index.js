@@ -1,9 +1,11 @@
 const express = require('express');
+const bodyParser = require("body-parser");
 
 const outerController = require('./outerController')
 
 const router = express.Router();
-
+router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({ extended: true }));
 const outer = new outerController();
 
 router.post('/stripe-payment', outer.stripeCardCharge)
@@ -13,6 +15,31 @@ router.post('/sendgrid-mail', outer.sendSendGridMail)
 
 router.get('/get-products', outer.getProducts)
 
-router.post('/create-product', outer.createProduct)
+// router.post('/create-product', async function(req, res, next) {
+//     try {
+//       res.json(await outer.create(req.body));
+//     } catch (err) {
+//       console.error(`Error while creating programming language`, err.message);
+//       next(err);
+//     }
+//   });
+  
+router.post('/create-product', (req,res)=>{
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    let title = req.query.title;
+    let description = req.query.description;
+    let price = req.query.price;
+    let quantity = req.query.quantity;
+    let image = req.query.image;
+    console.log('req.query.title',req.body.title)
+    let sql =  `INSERT INTO products  (title, description, price, quantity, image) 
+    VALUES  (?, ?, ?, ?, ?)`
+    
+    DBConnection.query(sql, [title, description, price, quantity,image],(err, result)=>{
+        if(err) throw err;
+        res.write('Inserted...');
+        res.end();
+    })
+})
 
 module.exports = router;

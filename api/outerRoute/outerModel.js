@@ -6,7 +6,7 @@ const { transporter, mailOptions } = require('../../nodemailer.config');
 const stripeCardChargeModel = async (req, res) => {
     const { email, phoneNumber, firstName, lastName, addressLine1, postalCode, city,
         state, country, products, total } = req.body;
-    console.log(req.body, ' body')
+    
     const result = await captureCardCharge(req, res);
 
     if (false) {
@@ -25,6 +25,7 @@ const stripeCardChargeModel = async (req, res) => {
     return result;
 }
 
+
 const getProductsModel = (callback) => {
 
     const sql = `select * from products`;
@@ -40,22 +41,25 @@ const getProductsModel = (callback) => {
     })
 }
 
-const createProductModel = (req, res) => {
-    const {title, description, price, quantity, image} = req.body;
-
-    DBConnection.query("INSERT INTO products Values ?", (title, description, price, quantity, image), (err, res) => {
-        if (err) {
-          console.log("error: ", err);
-          result(err, null);
-          return;
-        }
-    })    
-}
+// const createProductModel = (req, res) => {
+//     const { title, description, price, quantity, image} = req.body;
+//       console.log('title',req.query.title)
+//     DBConnection.query(
+//         `INSERT INTO products  (title, description, price, quantity, image) 
+//         VALUES  (?, ?, ?, ?, ?)`, [title, description, price, quantity,image]
+//       , (err, res) => {
+//         if (err) {
+//           console.log("error: ", err);
+//           return;
+//         }
+//         console.log('created product',res)
+//     })    
+// }
 
   
 
 module.exports = {
     stripeCardChargeModel,
     getProductsModel, 
-    createProductModel
+    // createProductModel
 }
