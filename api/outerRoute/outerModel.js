@@ -45,8 +45,8 @@ const getProductsModel = (callback) => {
 const createProductModel = (req, callback) => {
     const { title, description, price, quantity, image } = req.body;
     DBConnection.query(
-        `INSERT INTO products  (id, title, description, price, quantity, image) 
-        VALUES  (?, ?, ?, ?, ?, ?)`, [5, title, description, price, quantity, image]
+        `INSERT INTO products  (title, description, price, quantity, image) 
+        VALUES  (?, ?, ?, ?, ?)`, [title, description, price, quantity, image]
         , (err, res) => {
             if (err) {
                 console.log("error: ", err);
