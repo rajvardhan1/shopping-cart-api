@@ -3,6 +3,7 @@ require('dotenv').config();
 const path = require('path');
 const cors = require('cors');
 const express = require('express');
+const bodyParser = require('body-parser');
 const { v4: uuid } = require('uuid');
 const jsSHA = require('jssha');
 
@@ -12,6 +13,9 @@ const fetch = require('node-fetch');
 const CustomRoute = require('./api');
 
 const app = express();
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 global.ROOT_DIR = path.resolve(__dirname)
 

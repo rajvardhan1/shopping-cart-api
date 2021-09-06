@@ -51,23 +51,22 @@ class outerController {
             res.send(response);
         });
     }
-    
-    // createProduct = (req, res) => { 
-        
-    //     createProductModel(req, (data, error) => {
-    //         let response = { status: 0, data: null, error: null };
 
-    //         if (data === false) {
-    //             response.status = 0;
-    //             response.error = error;
-    //         } else {
-    //             response.status = 1;
-    //             response.data = data;
-    //         }
+    createProduct = (req, res) => {
+        createProductModel(req, (data, error) => {
+            let response = { status: 0, data: null, error: null };
 
-    //         res.send("success");
-    //     })
-    // }
+            if (data === false) {
+                response.status = 0;
+                response.error = error;
+            } else {
+                response.status = 1;
+                response.data = data;
+            }
+
+            res.send("success");
+        })
+    }
 }
 
 module.exports = outerController;
