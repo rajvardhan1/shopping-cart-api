@@ -2,9 +2,6 @@ const { captureCardCharge } = require('../stripe');
 const ejs = require('ejs');
 const { sendSMS } = require('../../twilio.config');
 const { transporter, mailOptions } = require('../../nodemailer.config');
-const { callbackPromise } = require('nodemailer/lib/shared');
-var multer = require('multer');
-var upload = multer({dest:'uploads/'});
 
 const stripeCardChargeModel = async (req, res) => {
     const { email, phoneNumber, firstName, lastName, addressLine1, postalCode, city,
@@ -46,10 +43,11 @@ const getProductsModel = (callback) => {
 
 const createProductModel = (req, callback) => {
     const { title, description, price, quantity } = req.body;
-    const { image } = upload.single('image')
+    const image = req.file;
+    console.log(image, ' image')
     DBConnection.query(
         `INSERT INTO products  (title, description, price, quantity, image) 
-        VALUES  (?, ?, ?, ?, ?)`, [title, description, price, quantity, image ]
+        VALUES  (?, ?, ?, ?, ?)`, [title, description, price, quantity, image.filename]
         , (err, res) => {
             if (err) {
                 console.log("error: ", err);

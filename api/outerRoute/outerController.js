@@ -53,6 +53,7 @@ class outerController {
     }
 
     createProduct = (req, res) => {
+        console.log(req.body, ' req body')
         createProductModel(req, (data, error) => {
             let response = { status: 0, data: null, error: null };
 

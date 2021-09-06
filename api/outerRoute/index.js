@@ -1,7 +1,7 @@
 const express = require('express');
-const bodyParser = require("body-parser");
-
 const outerController = require('./outerController')
+
+const upload = require('../../multer.config');
 
 const router = express.Router();
 const outer = new outerController();
@@ -12,7 +12,7 @@ router.post('/send-mail', outer.sendMail);
 router.post('/sendgrid-mail', outer.sendSendGridMail)
 
 router.get('/get-products', outer.getProducts)
-router.post('/create-product', outer.createProduct)
+router.post('/create-product', upload.single('image'), outer.createProduct)
 
 
 // router.post('/create-product', async function (req, res, next) {

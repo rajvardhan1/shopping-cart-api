@@ -10,15 +10,15 @@ const jsSHA = require('jssha');
 const bluesnap = require('bluesnap');
 const fetch = require('node-fetch');
 
-const CustomRoute = require('./api');
 
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-global.ROOT_DIR = path.resolve(__dirname)
+const CustomRoute = require('./api');
 
+global.ROOT_DIR = path.resolve(__dirname)
 
 const stripe = require('stripe')(process.env.STRIPE_KEY)
 
