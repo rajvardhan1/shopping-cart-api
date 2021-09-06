@@ -4,8 +4,6 @@ const bodyParser = require("body-parser");
 const outerController = require('./outerController')
 
 const router = express.Router();
-router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({ extended: true }));
 const outer = new outerController();
 
 router.post('/stripe-payment', outer.stripeCardCharge)
