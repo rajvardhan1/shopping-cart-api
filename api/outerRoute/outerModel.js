@@ -57,10 +57,58 @@ const createProductModel = (req, callback) => {
         })
 }
 
+const addProductModel = (req, callback) => {
+    const { title, description, price, quantity } = req.body;
+    const image = req.file;
+    console.log(image, ' image')
+    DBConnection.query(
+        `INSERT INTO addItems  (title, description, price, quantity, image) 
+        VALUES  (?, ?, ?, ?, ?)`, [title, description, price, quantity, image.filename]
+        , (err, res) => {
+            if (err) {
+                console.log("error: ", err);
+                callback(false, err)
+            }
+            callback(res)
+        })
+}
+
+const getCartProductsModel = (callback) => {
+
+    const sql = `select * from addItems`;
+
+    DBConnection.query(sql, (err, result) => {
+
+        if (result.length) {
+            callback(result);
+        } else {
+            callback(false, ' No data found')
+        }
+
+    })
+}
+
+
+const removeCartProductsModel = (req, callback) => {
+    const id  = req.params.id;
+    console.log('id',id);
+    DBConnection.query(
+        `DELETE FROM addItems WHERE (id)=(?)`, [id]
+        , (err, res) => {
+            if (err) {
+                console.log("error: ", err);
+                callback(false, err)
+            }
+            callback(res)
+        })
+}
 
 
 module.exports = {
     stripeCardChargeModel,
     getProductsModel,
-    createProductModel
+    createProductModel,
+    addProductModel,
+    getCartProductsModel,
+    removeCartProductsModel
 }

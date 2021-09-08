@@ -1,7 +1,7 @@
 const { sendSMS } = require('../../twilio.config');
 const { transporter, mailOptions } = require('../../nodemailer.config');
 const { sendEmail } = require('../../sendgrid.config');
-const { stripeCardChargeModel, getProductsModel, createProductModel } = require('./outerModel');
+const { stripeCardChargeModel, getProductsModel, createProductModel, addProductModel, getCartProductsModel, removeCartProductsModel } = require('./outerModel');
 
 class outerController {
 
@@ -67,6 +67,55 @@ class outerController {
 
             res.send("success");
         })
+    }
+
+    addProduct = (req, res) => {
+        console.log(req.body, ' req body')
+        addProductModel(req, (data, error) => {
+            let response = { status: 0, data: null, error: null };
+
+            if (data === false) {
+                response.status = 0;
+                response.error = error;
+            } else {
+                response.status = 1;
+                response.data = data;
+            }
+
+            res.send("Successfully created");
+        })
+    }
+
+    getCartProducts = (req, res) => {
+        getCartProductsModel((data, error) => {
+            let response = { status: 0, data: null, error: null };
+
+            if (data === false) {
+                response.status = 0;
+                response.error = error;
+            } else {
+                response.status = 1;
+                response.data = data;
+            }
+
+            res.send(response);
+        });
+    }
+
+    removeCartProducts = (req, res) => {
+        removeCartProductsModel(req,(data, error) => {
+            let response = { status: 0, data: null, error: null };
+
+            if (data === false) {
+                response.status = 0;
+                response.error = error;
+            } else {
+                response.status = 1;
+                response.data = data;
+            }
+
+            res.send(response);
+        });
     }
 }
 
