@@ -70,7 +70,6 @@ class outerController {
     }
 
     addProduct = (req, res) => {
-        console.log(req.body, ' req body')
         addProductModel(req, (data, error) => {
             let response = { status: 0, data: null, error: null };
 
@@ -79,10 +78,10 @@ class outerController {
                 response.error = error;
             } else {
                 response.status = 1;
-                response.data = data;
+                response.data = "product added to cart successfully";
             }
 
-            res.send("Successfully created");
+            res.send(response);
         })
     }
 
@@ -103,7 +102,7 @@ class outerController {
     }
 
     removeCartProducts = (req, res) => {
-        removeCartProductsModel(req,(data, error) => {
+        removeCartProductsModel(req, (data, error) => {
             let response = { status: 0, data: null, error: null };
 
             if (data === false) {

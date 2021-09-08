@@ -58,19 +58,17 @@ const createProductModel = (req, callback) => {
 }
 
 const addProductModel = (req, callback) => {
-    const { title, description, price, quantity } = req.body;
-    const image = req.file;
-    console.log(image, ' image')
-    DBConnection.query(
-        `INSERT INTO addItems  (title, description, price, quantity, image) 
-        VALUES  (?, ?, ?, ?, ?)`, [title, description, price, quantity, image.filename]
-        , (err, res) => {
-            if (err) {
-                console.log("error: ", err);
-                callback(false, err)
-            }
-            callback(res)
-        })
+    const { user_id, product_id, product_count } = req.body;
+
+    const query = `INSERT INTO cart_details  (user_id, product_id, product_count) 
+        VALUES  (${user_id}, ${product_id}, ${product_count}) `
+    DBConnection.query(query, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            callback(false, err)
+        }
+        callback(res)
+    })
 }
 
 const getCartProductsModel = (callback) => {
@@ -90,8 +88,8 @@ const getCartProductsModel = (callback) => {
 
 
 const removeCartProductsModel = (req, callback) => {
-    const id  = req.params.id;
-    console.log('id',id);
+    const id = req.params.id;
+    console.log('id', id);
     DBConnection.query(
         `DELETE FROM addItems WHERE (id)=(?)`, [id]
         , (err, res) => {
