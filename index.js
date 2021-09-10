@@ -13,7 +13,7 @@ const fetch = require('node-fetch');
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
 const CustomRoute = require('./api');
@@ -116,6 +116,6 @@ app.post('/payu-payment', (req, res) => {
 
 
 
-app.listen(8000, () => {
-    console.log("Listning  at PORT 8000")
+app.listen(9000, () => {
+    console.log("Listning  at PORT 9000")
 })

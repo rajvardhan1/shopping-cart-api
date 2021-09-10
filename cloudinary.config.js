@@ -1,7 +1,34 @@
+require('dotenv').config();
 const cloudinary = require('cloudinary').v2
 
 cloudinary.config({
-    cloud_name: "dvr7ge2zx",
-    api_key: "827311688278978",
-    api_secret: "8kt0xj0griERgNkwO4Wo3KJGfmY"
-  });
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRETE
+});
+
+const cloudUpload = async (filePath) => {
+  const options = {
+    folder: `uploads`,
+    use_filename: false,
+    resource_type: "auto"
+  };
+
+  let response;
+
+  await cloudinary.uploader.upload(
+    filePath,
+    options,
+    async function (error, result) {
+      if (error) {
+        response = error;
+      } else {
+        response = result;
+      };
+    }
+  );
+
+  return response;
+};
+
+module.exports = { cloudUpload }
