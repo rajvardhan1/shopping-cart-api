@@ -5,8 +5,19 @@ const { transporter, mailOptions } = require('../../nodemailer.config');
 
 const stripeCardChargeModel = async (req, res) => {
     const { email, phoneNumber, firstName, lastName, addressLine1, postalCode, city,
-        state, country, products, total } = req.body;
-
+        state, country, products, total } = req.body;   
+        products.map((product)=>{
+          DBConnection.query(
+            `Insert into order_details (user_id, product_id, product_count) values (?,?,?)`,
+            [2, product.product_id, 2]
+            , (err, res) => {
+                if (err) {
+                    console.log("error: ", err);
+                }
+                console.log('products',res)
+            })
+        })
+       
     const result = await captureCardCharge(req, res);
 
     if (false) {
@@ -59,7 +70,7 @@ const createProductModel = (req, callback) => {
 
 const addProductModel = (req, callback) => {
     const { user_id, product_id, product_count } = req.body;
-
+    
     const query = `INSERT INTO cart_details  (user_id, product_id, product_count) 
         VALUES  (${user_id}, ${product_id}, ${product_count}) `
     DBConnection.query(query, (err, res) => {
@@ -73,8 +84,8 @@ const addProductModel = (req, callback) => {
 
 const getCartProductsModel = (callback) => {
 
-    const sql = `select * from addItems`;
-
+    const sql = `SELECT product_id, user_id, title, description, price FROM cart_details JOIN products ON cart_details.product_id = products.id`
+    
     DBConnection.query(sql, (err, result) => {
 
         if (result.length) {
@@ -86,12 +97,10 @@ const getCartProductsModel = (callback) => {
     })
 }
 
-
 const removeCartProductsModel = (req, callback) => {
     const id = req.params.id;
-    console.log('id', id);
     DBConnection.query(
-        `DELETE FROM addItems WHERE (id)=(?)`, [id]
+        `DELETE FROM cart_details WHERE (product_id)=(?)`, [id]
         , (err, res) => {
             if (err) {
                 console.log("error: ", err);
@@ -101,6 +110,20 @@ const removeCartProductsModel = (req, callback) => {
         })
 }
 
+const getOrderModel = (callback) => {
+
+  const sql = `SELECT product_id, title, description, price FROM order_details JOIN products ON order_details.product_id = products.id`
+  
+  DBConnection.query(sql, (err, result) => {
+
+      if (result.length) {
+          callback(result);
+      } else {
+          callback(false, ' No data found')
+      }
+
+  })
+}
 
 module.exports = {
     stripeCardChargeModel,
@@ -108,5 +131,6 @@ module.exports = {
     createProductModel,
     addProductModel,
     getCartProductsModel,
-    removeCartProductsModel
+    removeCartProductsModel,
+    getOrderModel
 }

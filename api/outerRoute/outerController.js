@@ -1,7 +1,7 @@
 const { sendSMS } = require('../../twilio.config');
 const { transporter, mailOptions } = require('../../nodemailer.config');
 const { sendEmail } = require('../../sendgrid.config');
-const { stripeCardChargeModel, getProductsModel, createProductModel, addProductModel, getCartProductsModel, removeCartProductsModel } = require('./outerModel');
+const { stripeCardChargeModel, getProductsModel, createProductModel, addProductModel, getCartProductsModel, removeCartProductsModel, getOrderModel } = require('./outerModel');
 
 class outerController {
 
@@ -103,6 +103,22 @@ class outerController {
 
     removeCartProducts = (req, res) => {
         removeCartProductsModel(req, (data, error) => {
+            let response = { status: 0, data: null, error: null };
+
+            if (data === false) {
+                response.status = 0;
+                response.error = error;
+            } else {
+                response.status = 1;
+                response.data = data;
+            }
+
+            res.send(response);
+        });
+    }
+
+    getOrders = (req, res) => {
+        getOrderModel((data, error) => {
             let response = { status: 0, data: null, error: null };
 
             if (data === false) {
