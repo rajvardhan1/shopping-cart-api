@@ -95,7 +95,7 @@ class outerController {
                 response.status = 1;
                 response.data = data;
             }
-
+            console.log('res',response)
             res.send(response);
         });
     }

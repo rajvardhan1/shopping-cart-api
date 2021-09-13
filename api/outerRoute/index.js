@@ -18,19 +18,4 @@ router.get('/cart', outer.getCartProducts)
 router.delete('/delete-item/:id', outer.removeCartProducts)
 router.get('/order-details', outer.getOrders)
 
-// router.post("/upload", function(req, response, next){
-//     // collected image from a user
-//      const file =  req.files.photo
-
-//     console.log('body',req.tempFilePath);
-//     // upload image here
-//     Cloudinary.uploader.upload(file.tempFilePath, function(error, result){
-//            response.send({
-//                success: true,
-//                result
-//            })
-//      });
-
-// });
-
 module.exports = router;

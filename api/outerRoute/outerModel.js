@@ -45,6 +45,7 @@ const getProductsModel = (callback) => {
     DBConnection.query(sql, (err, result) => {
 
         if (result.length) {
+          console.log(result);
             callback(result);
         } else {
             callback(false, ' No data found')
@@ -85,7 +86,7 @@ const addProductModel = (req, callback) => {
 
 const getCartProductsModel = (callback) => {
 
-    const sql = `SELECT product_id, user_id, title, description, price FROM cart_details JOIN products ON cart_details.product_id = products.id`
+    const sql = `SELECT product_id, user_id, title, description, price, image FROM cart_details JOIN products ON cart_details.product_id = products.id`
 
     DBConnection.query(sql, (err, result) => {
 
@@ -113,7 +114,7 @@ const removeCartProductsModel = (req, callback) => {
 
 const getOrderModel = (callback) => {
 
-    const sql = `SELECT product_id, title, description, price FROM order_details JOIN products ON order_details.product_id = products.id`
+    const sql = `SELECT product_id, title, description, price, image FROM order_details JOIN products ON order_details.product_id = products.id`
 
     DBConnection.query(sql, (err, result) => {
 
